@@ -1,11 +1,15 @@
 from flask import Flask, request, jsonify, render_template
 import math
+import slack
 from math import sqrt
 from itertools import count, islice
+import hashlib
+
+from api2 import FLASK_APP
 
 app = Flask(__name__)
 
-@app.route('/factorial', methods=["GET"])
+@FLASK_APP.route('/factorial/<int:a>', methods=["GET"])
 def factorial():
     a = int(input('please enter an integer: '))
 
@@ -33,8 +37,8 @@ def factorial():
     print(str('You can choose'),a,str('objects from'),b,str('objects in'),my_combinations(a,b),str('ways'))
 
 
-@app.route('/fibonacci', methods=["GET"])
-def fibonacci():
+@FLASK_APP.route('/fibonacci/<int:start_num>', methods=["GET"])
+def fibo_sec():
     start_num = int(input('Enter starting number:'))
     end_num = int(input('Enter ending number:'))
 
@@ -52,18 +56,19 @@ def fibonacci():
         if first_fibo >= start_num and first_fibo <= end_num:
             fibo_nums.append(first_fibo)
 
-        if(first_fibo > end_num):
+        if (first_fibo > end_num):
             break
 
-    print('\nThe {} Fibonacci numbers between {} and {} are:'.format(len(fibo_nums),start_num,end_num))
+    print('\nThe {} Fibonacci numbers between {} and {} are:'.format(len(fibo_nums), start_num, end_num))
     result = ''
     for x in fibo_nums:
-        result = '{} {}'.format(result,x)
+        result = '{} {}'.format(result, x)
 
     print(result)
 
 
-@app.route('/is-prime', methods=["GET"])
+
+@FLASK_APP.route('/is-prime/<int:n>', methods=["GET"])
 def is_prime(n):
     if n < 2:
         return False
@@ -78,3 +83,11 @@ def is_prime(n):
         if is_prime(i)==True:
 
             print(i,end=' ')
+
+@FLASK_APP.route('/md5/<string:result>', methods=["GET"])
+def md5(result):
+    result = str(input('Enter the string you would like to be converted to MD5 hash: '))
+    result = hashlib.md5(result.encode())
+
+    print("The hash equivalent of this string would be: ", end='')
+    print(result.hexdigest())
