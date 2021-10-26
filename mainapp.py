@@ -2,6 +2,9 @@ from flask import Flask
 import hashlib
 import math
 from itertools import count, islice
+import requests
+import sys
+import getopt
 
 app=Flask('__main__')
 
@@ -50,8 +53,6 @@ def factorial():
     print(str('You can choose'), a, str('objects from'), b, str('objects in'), my_combinations(a, b), str('ways'))
 
 
-factorial()
-
 
 @app.route('/fibonacci/<int>')
 def fibo_sec():
@@ -82,24 +83,36 @@ def fibo_sec():
 
     print(result)
 
+@app.route('/slack-alert/<string>')
+def send_slack_message(message):
+    payload = '{"text":"%s"}' % message
+    response = requests.post('https://hooks.slack.com/services/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',
+                            data=payload)
+    print(response.text)
 
-fibo_sec()
+    def main(argv):
 
+        message = ''
+
+        try: opts, args = getopt.getopt(argv, "hm:", ["message="])
+
+        except getopt.GetoptError:
+            print('SlackMessage.py -m <message>')
+            sys.exit(2)
+        if len (opts) == 0:
+            message = "Hello World"
+        for opt, arg in opts:
+            if opt == '-h':
+                print ('SlackMessage.py -m <message>')
+                sys.exit()
+            elif opt in ("-m", "--message"):
+                message = arg
+
+
+        send_slack_message(message)
+
+    if __name__ == "__main__":
+        main(sys.argv[1:])
 
 if __name__ == '__main__':
     app.run(debug=False,host='0.0.0.0')
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-   { channel: 'alert',
-  blocks:
-   [ { type: 'header', text: [Object] },
-     { type: 'section', fields: [Array] },
-     { type: 'section', fields: [Array] } ] }
