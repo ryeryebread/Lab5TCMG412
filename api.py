@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, render_template
 import math
-import slack
 from math import sqrt
 from itertools import count, islice
 import hashlib
