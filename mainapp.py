@@ -98,8 +98,4 @@ if __name__ == '__main__':
     
     
     
-   { channel: 'alert',
-  blocks:
-   [ { type: 'header', text: [Object] },
-     { type: 'section', fields: [Array] },
-     { type: 'section', fields: [Array] } ] }
+   
