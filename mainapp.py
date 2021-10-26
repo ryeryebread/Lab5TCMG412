@@ -3,9 +3,9 @@ import hashlib
 import math
 from itertools import count, islice
 
-app=Flask(__main__)
+app=Flask('__main__')
 
-@app.route('is-prime/<num>')
+@app.route('/is-prime/<num>')
 def is_prime(n):
     if n < 2:
         return False
