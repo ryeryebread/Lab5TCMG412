@@ -101,12 +101,18 @@ def is_prime(n):
             print(i,end=' ')
 
 @FLASK_APP.route('/md5/<string:result>', methods=["GET"])
-def md5(result):
-    result = str(input('Enter the string you would like to be converted to MD5 hash: '))
+def md5(string):
+    #not sure this works. just inferred from what was already here
     result = hashlib.md5(result.encode())
+    result = result.hexdigest()
 
-    print("The hash equivalent of this string would be: ", end='')
-    print(result.hexdigest())
+    #print("The hash equivalent of this string would be: ", end='')
+    #print(result.hexdigest())
+
+    return jsonify(
+		input = string,
+		output =result)
+
 
 @app.route('/slack-alert/<string>')
 def send_slack_message(message):
