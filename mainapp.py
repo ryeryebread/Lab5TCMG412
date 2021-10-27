@@ -1,14 +1,19 @@
-from flask import Flask
+from flask import Flask, jsonify
 import hashlib
 import math
 from itertools import count, islice
-import requests
-import sys
-import getopt
+
 
 app=Flask('__main__')
 
 @app.route('/is-prime/<num>')
+def prine(x):
+    return jsonify(
+        input=x,
+        output=is_prime(x)
+    )
+
+
 def is_prime(n):
     if n < 2:
         return False
@@ -19,7 +24,7 @@ def is_prime(n):
 
     return True
 
-
+#Do we need this?
 for i in range(1, 500):
 
     if is_prime(i) == True:
@@ -53,9 +58,23 @@ def factorial():
     print(str('You can choose'), a, str('objects from'), b, str('objects in'), my_combinations(a, b), str('ways'))
 
 
+factorial()
+
 
 @app.route('/fibonacci/<int>')
-def fibo_sec():
+def fib(x):
+    return jsonify(
+        input = x,
+        output = fibo_sec(x)
+    )
+
+#NEED TO CHANGE FOR JUST ONE INPUT
+def fibo_sec(n):
+    if n <=0:
+        #NEED TO RETURN AN ERROR
+        print()
+
+
     start_num = int(input('Enter starting number:'))
     end_num = int(input('Enter ending number:'))
 
@@ -83,36 +102,45 @@ def fibo_sec():
 
     print(result)
 
-@app.route('/slack-alert/<string>')
-def send_slack_message(message):
-    payload = '{"text":"%s"}' % message
-    response = requests.post('https://hooks.slack.com/services/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',
-                            data=payload)
-    print(response.text)
 
-    def main(argv):
-
-        message = ''
-
-        try: opts, args = getopt.getopt(argv, "hm:", ["message="])
-
-        except getopt.GetoptError:
-            print('SlackMessage.py -m <message>')
-            sys.exit(2)
-        if len (opts) == 0:
-            message = "Hello World"
-        for opt, arg in opts:
-            if opt == '-h':
-                print ('SlackMessage.py -m <message>')
-                sys.exit()
-            elif opt in ("-m", "--message"):
-                message = arg
+fibo_sec()
 
 
-        send_slack_message(message)
+@app.route("/factorial/<int>")
+def factorial(num):
+    temp_num = 1
+    if num < 0:
+        return jsonify(
+			input = int(num),
+			output = "Error: Input not positive"
+            )
+    
+    elif num == 0:
+        return jsonify(
+			input = int(num),
+			output = int(1)
+            )
 
-    if __name__ == "__main__":
-        main(sys.argv[1:])
+    else:
+        for i in range(1,num):
+            temp_num = temp_num*i
+        return jsonify(
+			input = int(num),
+			output = int(factorial)
+            )
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=False,host='0.0.0.0')
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
