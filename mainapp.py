@@ -113,18 +113,10 @@ def md5(string):
 
 
 @app.route('/slack-alert/<string:message>')
-def send_slack_message(message):
-    payload = message
-    response = requests.post('https://hooks.slack.com/services/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',
-                            data=(jsonify(payload)))
-    print(response.text)
-
-    def main(argv):
-
-        send_slack_message(message)
-
-    if __name__ == "__main__":
-        main(sys.argv[1:])
-
+def slackalert(message):
+    payload = '{"text":"%s"}' % message
+    response = requests.post('https://hooks.slack.com/services/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',data=payload)
+    print(response.txt)
+    
 if __name__ == '__main__':
     app.run(debug=False,host='0.0.0.0')
