@@ -1,37 +1,17 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify, render_template
 import hashlib
+from math import sqrt
 import math
 from itertools import count, islice
+import requests
+import sys
+import getopt
 
+from api2 import FLASK_APP
 
-app=Flask('__main__')
+app = Flask(__name__)
 
-@app.route('/is-prime/<num>')
-def prine(x):
-    return jsonify(
-        input=x,
-        output=is_prime(x)
-    )
-
-
-def is_prime(n):
-    if n < 2:
-        return False
-
-    for number in islice(count(2), int(sqrt(n) - 1)):
-        if n % number == 0:
-            return False
-
-    return True
-
-#Do we need this?
-for i in range(1, 500):
-
-    if is_prime(i) == True:
-        print(i, end=' ')
-
-
-@app.route("/factorial/<num>")
+@FLASK_APP.route('/factorial/<int:a>', methods=["GET"])
 def factorial():
     a = int(input('please enter an integer: '))
 
@@ -41,6 +21,7 @@ def factorial():
         print()
         print('invalid input')
         exit()
+
 
     def my_factorial(c):
         n1 = math.factorial(c)
@@ -55,26 +36,11 @@ def factorial():
         n2 = de / nu
         return n2
 
-    print(str('You can choose'), a, str('objects from'), b, str('objects in'), my_combinations(a, b), str('ways'))
+    print(str('You can choose'),a,str('objects from'),b,str('objects in'),my_combinations(a,b),str('ways'))
 
 
-factorial()
-
-
-@app.route('/fibonacci/<int>')
-def fib(x):
-    return jsonify(
-        input = x,
-        output = fibo_sec(x)
-    )
-
-#NEED TO CHANGE FOR JUST ONE INPUT
-def fibo_sec(n):
-    if n <=0:
-        #NEED TO RETURN AN ERROR
-        print()
-
-
+@FLASK_APP.route('/fibonacci/<int:start_num>', methods=["GET"])
+def fibo_sec():
     start_num = int(input('Enter starting number:'))
     end_num = int(input('Enter ending number:'))
 
@@ -103,44 +69,61 @@ def fibo_sec(n):
     print(result)
 
 
-fibo_sec()
+
+@FLASK_APP.route('/is-prime/<int:n>', methods=["GET"])
+def is_prime(n):
+    if n < 2:
+        return False
+
+    for number in islice(count(2), int(sqrt(n) - 1)):
+        if n % number == 0:
+            return False
+
+    return True
+    for i in range (1, 500):
+
+        if is_prime(i)==True:
+
+            print(i,end=' ')
+
+@FLASK_APP.route('/md5/<string:result>', methods=["GET"])
+def md5(result):
+    result = str(input('Enter the string you would like to be converted to MD5 hash: '))
+    result = hashlib.md5(result.encode())
+
+    print("The hash equivalent of this string would be: ", end='')
+    print(result.hexdigest())
+
+@app.route('/slack-alert/<string>')
+def send_slack_message(message):
+    payload = '{"text":"%s"}' % message
+    response = requests.post('https://hooks.slack.com/services/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',
+                            data=payload)
+    print(response.text)
+
+    def main(argv):
+
+        message = ''
+
+        try: opts, args = getopt.getopt(argv, "hm:", ["message="])
+
+        except getopt.GetoptError:
+            print('SlackMessage.py -m <message>')
+            sys.exit(2)
+        if len (opts) == 0:
+            message = "Hello World"
+        for opt, arg in opts:
+            if opt == '-h':
+                print ('SlackMessage.py -m <message>')
+                sys.exit()
+            elif opt in ("-m", "--message"):
+                message = arg
 
 
-@app.route("/factorial/<int>")
-def factorial(num):
-    temp_num = 1
-    if num < 0:
-        return jsonify(
-			input = int(num),
-			output = "Error: Input not positive"
-            )
-    
-    elif num == 0:
-        return jsonify(
-			input = int(num),
-			output = int(1)
-            )
+        send_slack_message(message)
 
-    else:
-        for i in range(1,num):
-            temp_num = temp_num*i
-        return jsonify(
-			input = int(num),
-			output = int(factorial)
-            )
-
-
-
+    if __name__ == "__main__":
+        main(sys.argv[1:])
 
 if __name__ == '__main__':
     app.run(debug=False,host='0.0.0.0')
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
