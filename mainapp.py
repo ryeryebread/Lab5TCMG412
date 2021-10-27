@@ -106,6 +106,32 @@ def fibo_sec(n):
 fibo_sec()
 
 
+@app.route("/factorial/<int>")
+def factorial(num):
+    temp_num = 1
+    if num < 0:
+        return jsonify(
+			input = int(num),
+			output = "Error: Input not positive"
+            )
+    
+    elif num == 0:
+        return jsonify(
+			input = int(num),
+			output = int(1)
+            )
+
+    else:
+        for i in range(1,num):
+            temp_num = temp_num*i
+        return jsonify(
+			input = int(num),
+			output = int(factorial)
+            )
+
+
+
+
 if __name__ == '__main__':
     app.run(debug=False,host='0.0.0.0')
     
