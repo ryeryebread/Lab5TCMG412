@@ -7,6 +7,13 @@ from itertools import count, islice
 app=Flask('__main__')
 
 @app.route('/is-prime/<num>')
+def prine(x):
+    return jsonify(
+        input=x,
+        output=is_prime(x)
+    )
+
+
 def is_prime(n):
     if n < 2:
         return False
@@ -17,7 +24,7 @@ def is_prime(n):
 
     return True
 
-
+#Do we need this?
 for i in range(1, 500):
 
     if is_prime(i) == True:
