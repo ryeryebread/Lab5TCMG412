@@ -7,13 +7,12 @@ import requests
 import sys
 import getopt
 
-from api2 import FLASK_APP
 
 app = Flask(__name__)
 
 
 #I REPLACED ALL OF FACTORIAL; this should work now
-@FLASK_APP.route('/factorial/<int:a>', methods=["GET"])
+@app.route('/factorial/<int:a>', methods=["GET"])
 def factorial(num):
     temp_num = 1
     if num < 0:
@@ -37,7 +36,7 @@ def factorial(num):
             )
 
 
-@FLASK_APP.route('/fibonacci/<int:start_num>', methods=["GET"])
+@app.route('/fibonacci/<int:start_num>', methods=["GET"])
 def fib(x):
     return jsonify(
         input = x,
@@ -75,7 +74,7 @@ def fibo_sec():
 
 
 
-@FLASK_APP.route('/is-prime/<int:n>', methods=["GET"])
+@app.route('/is-prime/<int:n>', methods=["GET"])
 def prime(x):
     return jsonify(
         input=x,
@@ -100,7 +99,7 @@ def is_prime(n):
 
             print(i,end=' ')
 
-@FLASK_APP.route('/md5/<string:result>', methods=["GET"])
+@app.route('/md5/<string:result>', methods=["GET"])
 def md5(string):
     #not sure this works. just inferred from what was already here
     result = string
@@ -112,31 +111,15 @@ def md5(string):
 		output =result)
 
 
-@app.route('/slack-alert/<string>')
+
+@app.route('/slack-alert/<string:message>')
 def send_slack_message(message):
-    payload = '{"text":"%s"}' % message
+    payload = message
     response = requests.post('https://hooks.slack.com/services/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',
-                            data=payload)
+                            data=(jsonify(payload)))
     print(response.text)
 
     def main(argv):
-
-        message = ''
-
-        try: opts, args = getopt.getopt(argv, "hm:", ["message="])
-
-        except getopt.GetoptError:
-            print('SlackMessage.py -m <message>')
-            sys.exit(2)
-        if len (opts) == 0:
-            message = "Hello World"
-        for opt, arg in opts:
-            if opt == '-h':
-                print ('SlackMessage.py -m <message>')
-                sys.exit()
-            elif opt in ("-m", "--message"):
-                message = arg
-
 
         send_slack_message(message)
 
