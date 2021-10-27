@@ -11,35 +11,40 @@ from api2 import FLASK_APP
 
 app = Flask(__name__)
 
+
+#I REPLACED ALL OF FACTORIAL; this should work now
 @FLASK_APP.route('/factorial/<int:a>', methods=["GET"])
-def factorial():
-    a = int(input('please enter an integer: '))
+def factorial(num):
+    temp_num = 1
+    if num < 0:
+        return jsonify(
+			input = int(num),
+			output = "Error: Input not positive"
+            )
+    
+    elif num == 0:
+        return jsonify(
+			input = int(num),
+			output = int(1)
+            )
 
-    b = int(input('please enter and integer: '))
-
-    if a < b or a < 0 or b < 0:
-        print()
-        print('invalid input')
-        exit()
-
-
-    def my_factorial(c):
-        n1 = math.factorial(c)
-
-        return n1
-
-    def my_combinations(n, k):
-        de = my_factorial(n)
-        x = my_factorial(n - k)
-        y = my_factorial(k)
-        nu = x * y
-        n2 = de / nu
-        return n2
-
-    print(str('You can choose'),a,str('objects from'),b,str('objects in'),my_combinations(a,b),str('ways'))
+    else:
+        for i in range(1,num):
+            temp_num = temp_num*i
+        return jsonify(
+			input = int(num),
+			output = int(factorial)
+            )
 
 
 @FLASK_APP.route('/fibonacci/<int:start_num>', methods=["GET"])
+def fib(x):
+    return jsonify(
+        input = x,
+        output = fibo_sec(x)
+    )
+
+#NEED TO FIX ASKING FOR INPUT AND ADD RETURN
 def fibo_sec():
     start_num = int(input('Enter starting number:'))
     end_num = int(input('Enter ending number:'))
@@ -71,6 +76,13 @@ def fibo_sec():
 
 
 @FLASK_APP.route('/is-prime/<int:n>', methods=["GET"])
+def prime(x):
+    return jsonify(
+        input=x,
+        output=is_prime(x)
+    )
+
+#THIS MIGHT WORK; need to test
 def is_prime(n):
     if n < 2:
         return False
@@ -80,6 +92,8 @@ def is_prime(n):
             return False
 
     return True
+
+    #We dont need this code right?
     for i in range (1, 500):
 
         if is_prime(i)==True:
