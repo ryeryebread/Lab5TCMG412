@@ -103,11 +103,9 @@ def is_prime(n):
 @FLASK_APP.route('/md5/<string:result>', methods=["GET"])
 def md5(string):
     #not sure this works. just inferred from what was already here
+    result = string
     result = hashlib.md5(result.encode())
     result = result.hexdigest()
-
-    #print("The hash equivalent of this string would be: ", end='')
-    #print(result.hexdigest())
 
     return jsonify(
 		input = string,
