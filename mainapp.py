@@ -103,7 +103,7 @@ def is_prime(n):
 def md5(string):
     #not sure this works. just inferred from what was already here
     result = string
-    result = hashlib.md5(result.encode())
+    result = hashlib.md5(string.encode())
     result = result.hexdigest()
 
     return jsonify(
