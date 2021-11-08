@@ -164,3 +164,16 @@ def delete(key_string):
                         command="DELETE " + key_string,
                         result=False,
                         error="Key does not exist."), 404
+
+
+
+{
+    "success": true,
+    "string": "user updated with ID 4",
+    "id": 4
+}
+
+
+{
+  "message": "Invalid Application-Id or API-Key"
+}
