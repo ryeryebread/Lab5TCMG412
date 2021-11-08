@@ -121,12 +121,12 @@ def get_value(key_string):
                         value=False,
                         command="GET " + key_string,
                         result=False,
-                        error="Key does not exist."), 400
+                        error="Invalid request"), 400
 
 
     if redis.Redis.exists(key_string) == False:
         return jsonify(key=key_string,
-                        value=False,
+                        value=temp_string,
                         command="GET " + key_string,
                         result=False,
                         error="Key does not exist."), 404
@@ -138,3 +138,29 @@ def get_value(key_string):
                         command="GET " + key_string,
                         result=True,
                         error=""), 200
+
+@FLASK_APP.route("/keyval/<string:key_string>", methods=["DELETE"])                        
+def delete(key_string):
+    try:
+        temp_string = r.get(key_string)
+    except redis.RedisError:
+        return jsonify(key=key_string,
+                        value=False,
+                        command="DELETE " + key_string,
+                        result=False,
+                        error="Invalid request"), 400
+
+
+    if redis.Redis.EXISTS(key_string):
+        redis.Redis.delete(key_string)
+        return jsonify(key=key_string,
+                        value=temp_string,
+                        command="DELETE " + key_string,
+                        result=True,
+                        error=""), 200
+    else:
+        return jsonify(key=key_string,
+                        value=temp_string,
+                        command="DELETE " + key_string,
+                        result=False,
+                        error="Key does not exist."), 404
