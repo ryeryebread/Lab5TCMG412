@@ -6,13 +6,14 @@ from itertools import count, islice
 import requests
 import sys
 import getopt
+import redis
 from redis import Redis,StrictRedis,RedisError
 from werkzeug.datastructures import V
 
 
 #PORT MAY BE WRONG
-r = redis.Redis(host="redis")
-redis = StrictRedis('redis-server', 6379, charset="utf-8", decode_responses=True)
+r = redis.Redis(host='redis', port=6379, db=0)
+redis = StrictRedis('redis', 6379, charset="utf-8", decode_responses=True)
 app = Flask(__name__)
 
 
