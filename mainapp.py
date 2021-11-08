@@ -6,6 +6,12 @@ from itertools import count, islice
 import requests
 import sys
 import getopt
+import redis
+
+
+#PORT MAY BE WRONG
+r = redis.Redis(host='redis', port=5000, db=0)
+
 
 
 app = Flask(__name__)
@@ -101,3 +107,34 @@ def slackalert(message):
     
 if __name__ == '__main__':
     app.run(debug=False,host='0.0.0.0')
+
+
+
+#LAB 6
+#GET FUNCTION
+@FLASK_APP.route("/keyval/<string:key_string>", methods=["GET"])
+def get_value(key_string):
+    try:
+        temp_string = r.get(key_string)
+    except redis.RedisError:
+        return jsonify(key=key_string,
+                        value=False,
+                        command="GET " + key_string,
+                        result=False,
+                        error="Key does not exist."), 400
+
+
+    if redis.Redis.exists(key_string) == False:
+        return jsonify(key=key_string,
+                        value=False,
+                        command="GET " + key_string,
+                        result=False,
+                        error="Key does not exist."), 404
+
+    else:
+        val = redis.REDIS.get(key_string)
+        return jsonify(key=key_string,
+                        value=val,
+                        command="GET " + key_string,
+                        result=True,
+                        error=""), 200
