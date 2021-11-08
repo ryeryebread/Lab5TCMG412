@@ -18,7 +18,7 @@ app = Flask(__name__)
 
 
 #I REPLACED ALL OF FACTORIAL; this should work now
-@app.route('/factorial/<int:a>', methods=["GET"])
+@app.route('/factorial/<int:a>')
 def factorial(num):
     temp_num = 1
     if num < 0:
@@ -42,7 +42,7 @@ def factorial(num):
             )
 
 
-@app.route('/fibonacci/<int:start_num>', methods=["GET"])
+@app.route('/fibonacci/<int:start_num>')
 def fib(x):
     return jsonify(
         input = x,
@@ -61,7 +61,7 @@ def fibo_sec(n):
 
 
 
-@app.route('/is-prime/<int:n>', methods=["GET"])
+@app.route('/is-prime/<int:n>')
 def prime(x):
     return jsonify(
         input=x,
@@ -86,7 +86,7 @@ def is_prime(n):
 
             print(i,end=' ')
 
-@app.route('/md5/<string:result>', methods=["GET"])
+@app.route('/md5/<string:result>')
 def md5(string):
     #not sure this works. just inferred from what was already here
     result = string
