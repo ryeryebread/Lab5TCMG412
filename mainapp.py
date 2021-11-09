@@ -10,7 +10,7 @@ import redis
 from redis import Redis,StrictRedis,RedisError
 from werkzeug.datastructures import V
 
-
+#Use strict redis
 redis = StrictRedis('redis', 6379, charset="utf-8", decode_responses=True)
 app = Flask(__name__)
 
