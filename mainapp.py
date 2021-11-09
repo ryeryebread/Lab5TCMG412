@@ -100,7 +100,7 @@ def md5(string):
 def slackalert(message):
     payload = '{"text":"%s"}' % message
     requests.post('https://hooks.slack.com/services/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', data=payload)
-    return jsonify(input=message, output=True)
+    return jsonify(True)
 
 
 if __name__ == '__main__':
