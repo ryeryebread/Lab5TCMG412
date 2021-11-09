@@ -1,14 +1,13 @@
-from flask import Flask, request, jsonify, render_template
+
+from flask import Flask, request, jsonify
 import hashlib
 from math import sqrt
-import math
 from itertools import count, islice
 import requests
 import sys
 import getopt
-import redis
 from redis import Redis,StrictRedis,RedisError
-from werkzeug.datastructures import V
+
 
 #Use strict redis
 redis = StrictRedis('redis', 6379, charset="utf-8", decode_responses=True)
