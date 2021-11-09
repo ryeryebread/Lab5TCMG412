@@ -13,7 +13,7 @@ from werkzeug.datastructures import V
 
 #PORT MAY BE WRONG
 r = redis.Redis(host='redis', port=6379, db=0)
-redis = StrictRedis('redis', 6379, charset="utf-8", decode_responses=True)
+sr = StrictRedis('redis', 6379, charset="utf-8", decode_responses=True)
 app = Flask(__name__)
 
 
@@ -98,7 +98,7 @@ def md5(string):
 		output =result)
 
 
-
+#Slack alert
 @app.route('/slack-alert/<string:message>')
 def slackalert(message):
     payload = '{"text":"%s"}' % message
@@ -112,13 +112,14 @@ if __name__ == '__main__':
 
 #LAB 6
 
+
 #POST function
 @app.route('/keyval', methods=['POST'])
 def handle_post():
     client_data = request.get_json()
     v = client_data('value')
 
-
+    #Check for valid JSON
     if client_data.get('key'):
         k = client_data.get('key')
     else:
@@ -132,8 +133,7 @@ def handle_post():
             error=err_string
         ), 400
 
-
-
+    #Check if key already exists
     if redis.exists(k):
         err_string = "Key already exists"
         return jsonify(
@@ -144,9 +144,7 @@ def handle_post():
             error=err_string
         ), 409
 
-
-
-    #store data in redis
+    #Store data in redis
     redis_result = redis.set(k, v)
     if redis_result == False:
         err_string = "Could not write to DB"
@@ -162,6 +160,50 @@ def handle_post():
     ), 400
 
 
+#PUT function
+@app.route('/keyval', methods=['PUT'])
+def handle_post():
+    client_data = request.get_json()
+    v = client_data('value')
+
+    #Check for valid JSON
+    if client_data.get('key'):
+        k = client_data.get('key')
+    else:
+        k = ''
+        err_string = "Invalid request from client"
+        return jsonify(
+            key=k,
+            value=v,
+            command=f"CREATE {k}/{v}",
+            result=False,
+            error=err_string
+        ), 400
+
+    #Check if key doesn't exist
+    if redis.exists(k):
+        err_string = "Key already exists"
+        return jsonify(
+            key=k,
+            value=v,
+            command=f"CREATE {k}/{v}",
+            result=False,
+            error=err_string
+        ), 409
+    else:
+        #store data in redis
+        redis_result = redis.set(k, v)
+        if redis_result == False:
+            err_string = "Could not write to DB"
+        else:
+            err_string = None
+            return jsonify(
+            key=k,
+            value=v,
+            command=f"CREATE {k}/{v}",
+            result=redis_result,
+            error=err_string   
+        )
 
 #GET FUNCTION
 @app.route("/keyval/<string:key_string>", methods=["GET"])
@@ -191,6 +233,7 @@ def get_value(key_string):
                         result=True,
                         error=""), 200
 
+#DELETE function
 @app.route("/keyval/<string:key_string>", methods=["DELETE"])                        
 def delete(key_string):
     try:
