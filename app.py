@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 import hashlib
 from math import sqrt
@@ -15,7 +14,7 @@ app = Flask(__name__)
 
 
 # I REPLACED ALL OF FACTORIAL; this should work now
-@app.route('/factorial/<int:a>')
+@app.route('/factorial/<int:num>')
 def factorial(num):
     temp_num = 1
     if num < 0:
@@ -40,10 +39,10 @@ def factorial(num):
 
 
 @app.route('/fibonacci/<int:start_num>')
-def fib(x):
+def fib(start_num):
     return jsonify(
-        input=x,
-        output=fibo_sec(x)
+        input=start_num,
+        output=fibo_sec(start_num)
     )
 
 
@@ -59,10 +58,10 @@ def fibo_sec(n):
 
 
 @app.route('/is-prime/<int:n>')
-def prime(x):
+def prime(n):
     return jsonify(
-        input=x,
-        output=is_prime(x)
+        input=n,
+        output=is_prime(n)
     )
 
 
@@ -84,27 +83,26 @@ def is_prime(n):
 
 
 @app.route('/md5/<string:result>')
-def md5(string):
+def md5(result):
     # not sure this works. just inferred from what was already here
-    result = string
-    result = hashlib.md5(string.encode())
+    start  = result
+    result = result
+    result = hashlib.md5(result.encode())
     result = result.hexdigest()
 
     return jsonify(
-        input=string,
-        output=result)
-
+        input=start,
+        output=result
+    )
 
 # Slack alert
 @app.route('/slack-alert/<string:message>')
 def slackalert(message):
     payload = '{"text":"%s"}' % message
     requests.post('https://hooks.slack.com/services/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', data=payload)
-    return jsonify(True)
+    return jsonify(input=message,
+        output=True)
 
-
-if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0')
 
 
 # LAB 6
@@ -236,7 +234,7 @@ def get_value(key_string):
 def delete(key_string):
     try:
         temp_string = redis.get(key_string)
-    except Redis.RedisError:
+    except redis.RedisError:
         return jsonify(key=key_string,
                        value=False,
                        command="DELETE " + key_string,
@@ -267,3 +265,6 @@ def delete(key_string):
 #{
 #    "message": "Invalid Application-Id or API-Key"
 #}
+
+if __name__ == '__main__':
+    app.run(debug=False, host='0.0.0.0')
