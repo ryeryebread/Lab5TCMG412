@@ -1,0 +1,26 @@
+#normal cases
+- url: /factorial/10
+  method: GET
+  result: 3628800
+- url: /factorial/3
+  method: GET
+  result: 6
+- url: /fibonacci/10
+  method: GET
+  result: [0, 1, 1, 2, 3, 5, 8]
+- url: /fibonacci/14
+  method: GET
+  result: [0, 1, 1, 2, 3, 5, 8, 13]
+- url: /is-prime/17
+  method: GET
+  result: True
+- url: /is-prime/11
+  method: GET
+  result: True
+- url: /md5/testingstring
+  method: GET
+  result: 93d04b77f27353bcd3147d85111a698a
+- url: /md5/hereisatest
+  method: GET
+  result: 118759ec903244e81b4012f20362585c
+#ADD SLACK LATER
