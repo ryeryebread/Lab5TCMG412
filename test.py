@@ -31,4 +31,4 @@ for item in yaml.full_load('test.yaml'):
         failed_total += 1
 
 print("Test passed " + success_total)
-print("Test failed " + failed_total
+print("Test failed " + failed_total)
