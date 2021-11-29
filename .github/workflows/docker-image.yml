@@ -1,0 +1,32 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build Test File
+      
+    - name: Build API
+    
+    - name: Docker compose
+    
+    - name: Docker ps
+    
+    - name: Test Code
+    
+    - name: Pushing image
+      run: |
+        docker login -u ${{ secrets.Dylan_username}} -p ${{ secrets.Dylan_password}}
+        docker image tag dsanders14/tcmg412-docker dsanders14/tcmg412-docker:latest
+        docker image tag dsanders14/tcmg412-docker dsanders14/tcmg412-docker:$(date +%s)
+        docker image push --all-tags dsanders14/tcmg412-docker
