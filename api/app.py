@@ -1,10 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, json, request, jsonify
 import hashlib
 from math import sqrt
 from itertools import count, islice
 import requests
-import sys
-import getopt
 from redis import Redis,StrictRedis,RedisError
 
 
@@ -12,8 +10,7 @@ from redis import Redis,StrictRedis,RedisError
 redis = StrictRedis('redis', 6379, charset="utf-8", decode_responses=True)
 app = Flask(__name__)
 
-
-# I REPLACED ALL OF FACTORIAL; this should work now
+#factorial
 @app.route('/factorial/<int:num>')
 def factorial(num):
     temp_num = 1
@@ -30,33 +27,38 @@ def factorial(num):
         )
 
     else:
-        for i in range(1, num):
+        for i in range(1, int(num)+1):
             temp_num = temp_num * i
         return jsonify(
             input=int(num),
-            output=int(factorial)
+            output=int(temp_num)
         )
 
+#fibonacci
+@app.route("/fibonacci/<int:number>")
+def calc_fibonacci(number):
+    fibonacci = [0]
+    c1 = 0
+    c2 = 1
+    fib = 0
+    check = 0
 
-@app.route('/fibonacci/<int:start_num>')
-def fib(start_num):
-    return jsonify(
-        input=start_num,
-        output=fibo_sec(start_num)
-    )
-
-
-# NEED TO FIX ASKING FOR INPUT AND ADD RETURN
-def fibo_sec(n):
-    if n == 0 or n is None:
-        return 0
-    elif n == 1 or n == 2:
-        return 1
+    if number < 0:
+        return jsonify(input=number, output="Error: Please use a number greater or equal to 0")
+    elif number == 0:
+        fibonacci = [0]
     else:
-        # do fibonacci
-        return fibo_sec(n - 2) + fibo_sec(n - 1)
+        while check == 0:
+            fib = c1 + c2
+            c2 = c1
+            c1 = fib
+            if fib <= number:
+                fibonacci.append(fib)
+            else:
+                check = 1
+    return jsonify(input=number, output=fibonacci)
 
-
+#is_prime
 @app.route('/is-prime/<int:n>')
 def prime(n):
     return jsonify(
@@ -64,8 +66,6 @@ def prime(n):
         output=is_prime(n)
     )
 
-
-# THIS MIGHT WORK; need to test
 def is_prime(n):
     if n < 2:
         return False
@@ -76,15 +76,9 @@ def is_prime(n):
 
     return True
 
-    # We dont need this code right?
-    for i in range(1, 500):
-        if is_prime(i) == True:
-            print(i, end=' ')
-
-
+#md5
 @app.route('/md5/<string:result>')
 def md5(result):
-    # not sure this works. just inferred from what was already here
     start  = result
     result = result
     result = hashlib.md5(result.encode())
@@ -95,7 +89,7 @@ def md5(result):
         output=result
     )
 
-# Slack alert
+#slack alert
 @app.route('/slack-alert/<string:message>')
 def slackalert(message):
     payload = '{"text":"%s"}' % message
