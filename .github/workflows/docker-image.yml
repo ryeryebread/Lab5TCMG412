@@ -44,4 +44,3 @@ jobs:
         docker image push --all-tags dsanders14/tcmg412-docker
 
 
-Redis docker image tage test code
