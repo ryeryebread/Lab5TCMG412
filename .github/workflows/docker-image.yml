@@ -42,3 +42,6 @@ jobs:
         docker image tag dsanders14/tcmg412-docker dsanders14/tcmg412-docker:latest
         docker image tag dsanders14/tcmg412-docker dsanders14/tcmg412-docker:$(date +%s)
         docker image push --all-tags dsanders14/tcmg412-docker
+
+
+Redis docker image tage test code
