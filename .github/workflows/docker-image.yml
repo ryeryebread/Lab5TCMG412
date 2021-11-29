@@ -15,14 +15,26 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build Test File
+      run: |
+        cd API-TEST
+        docker build -t dsanders14/tcmg412-test-file .
       
     - name: Build API
+      run: |
+        cd api
+        docker build -t dsanders14/tcmg412-API .
     
     - name: Docker compose
+      run: |
+        cd api
+        docker-compose up -d
     
     - name: Docker ps
+      run: docker ps
     
     - name: Test Code
+      run: |
+        docker run dsanders14/tcmg412-test-file
     
     - name: Pushing image
       run: |
