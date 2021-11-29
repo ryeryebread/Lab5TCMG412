@@ -262,3 +262,16 @@ def delete(key_string):
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')
+    
+    
+  # GET FUNCTION
+@app.route("/keyval/<string:key_string>", methods=["GET"])
+def get_value(key_string):
+    try:
+        temp_string = redis.get(key_string)
+    except redis.RedisError:
+        return jsonify(key=key_string,
+                       value=False,
+                       command="GET " + key_string,
+                       result=False,
+                       error="Invalid request"), 400
